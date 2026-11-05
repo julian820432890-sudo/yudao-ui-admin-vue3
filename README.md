@@ -91,7 +91,7 @@ $env:VITE_USE_BUNDLE_ANALYZER='true'; pnpm build:prod; Remove-Item Env:VITE_USE_
 
 ② Spring Cloud 微服务架构：<https://cloud.iocoder.cn>
 
-![架构图](/.image/common/yudao-cloud-architecture.png)
+![架构图](/.image/common/antian-cloud-architecture.png)
 
 ## 内置功能
 

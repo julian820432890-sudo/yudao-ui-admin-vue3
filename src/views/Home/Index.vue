@@ -243,7 +243,7 @@ const getProject = async () => {
       color: '#6DB33F'
     },
     {
-      name: 'yudao-ui-admin-vue3',
+      name: 'antian-ui-admin-vue3',
       icon: 'ep:element-plus',
       message: 'github.com/yudaocode/yudao-ui-admin-vue3',
       personal: 'Vue3 + element-plus 管理后台',
@@ -251,7 +251,7 @@ const getProject = async () => {
       color: '#409EFF'
     },
     {
-      name: 'yudao-mall-uniapp',
+      name: 'antian-mall-uniapp',
       icon: 'icon-park-outline:mall-bag',
       message: 'github.com/yudaocode/yudao-mall-uniapp',
       personal: 'Vue3 + uniapp 商城手机端',
@@ -259,7 +259,7 @@ const getProject = async () => {
       color: '#ff4d4f'
     },
     {
-      name: 'yudao-cloud',
+      name: 'antian-cloud',
       icon: 'material-symbols:cloud-outline',
       message: 'github.com/YunaiV/yudao-cloud',
       personal: 'Spring Cloud 微服务架构',
@@ -267,7 +267,7 @@ const getProject = async () => {
       color: '#1890ff'
     },
     {
-      name: 'yudao-ui-admin-vben',
+      name: 'antian-ui-admin-vben',
       icon: 'devicon:antdesign',
       message: 'github.com/yudaocode/yudao-ui-admin-vben',
       personal: 'Vue3 + vben5(antd) 管理后台',
@@ -275,7 +275,7 @@ const getProject = async () => {
       color: '#e18525'
     },
     {
-      name: 'yudao-ui-admin-uniapp',
+      name: 'antian-ui-admin-uniapp',
       icon: 'ant-design:mobile',
       message: 'github.com/yudaocode/yudao-ui-admin-uniapp',
       personal: 'Vue3 + uniapp 管理手机端',

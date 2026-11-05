@@ -59,7 +59,7 @@ const mapUrl = computed(() => {
     content: props.label || '',
     output: 'html',
     coord_type: 'bd09ll',
-    src: 'webapp.yudao.admin'
+    src: 'webapp.antian.admin'
   })
   return `https://api.map.baidu.com/marker?${params.toString()}`
 })

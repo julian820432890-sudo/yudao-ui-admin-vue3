@@ -1,5 +1,5 @@
 /**
- * AI1 大模型的公共常量，与后端 yudao-module-ai1-springai 的枚举保持一致
+ * AI1 大模型的公共常量，与后端 antian-module-ai1-springai 的枚举保持一致
  */
 
 /** 模型类型，对应后端 Ai1ModelTypeEnum */
