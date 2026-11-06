@@ -1,0 +1,115 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="128"
+  height="128"
+  viewBox="0 0 128 128"
+  fill="none"
+>
+  <title>智能计算核心与数据轨道</title>
+  <defs>
+    <radialGradient id="ambient">
+      <stop stop-color="#25c9ff" stop-opacity="0.2" />
+      <stop offset="1" stop-color="#25c9ff" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="orbit" x1="18" y1="18" x2="108" y2="109" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb" />
+      <stop offset="0.55" stop-color="#168fff" />
+      <stop offset="1" stop-color="#20d8df" />
+    </linearGradient>
+    <linearGradient id="top" x1="43" y1="38" x2="84" y2="63" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8cefff" />
+      <stop offset="1" stop-color="#2699fa" />
+    </linearGradient>
+    <linearGradient id="left" x1="43" y1="52" x2="64" y2="90" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#258df2" />
+      <stop offset="1" stop-color="#2458ce" />
+    </linearGradient>
+    <linearGradient id="right" x1="85" y1="51" x2="65" y2="89" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#48dbf0" />
+      <stop offset="1" stop-color="#1485e4" />
+    </linearGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="1.5" />
+    </filter>
+    <style>
+      .orbit {
+        transform-origin: 64px 64px;
+        animation: orbit-spin 12s linear infinite;
+      }
+      .orbit-reverse {
+        transform-origin: 64px 64px;
+        animation: orbit-spin 9s linear infinite reverse;
+      }
+      .core {
+        animation: core-float 3.6s ease-in-out infinite;
+      }
+      .pulse {
+        animation: node-pulse 2.8s ease-in-out infinite;
+      }
+      @keyframes orbit-spin {
+        to { transform: rotate(360deg); }
+      }
+      @keyframes core-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+      }
+      @keyframes node-pulse {
+        0%, 100% { opacity: 0.45; }
+        50% { opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .orbit, .orbit-reverse, .core, .pulse { animation: none; }
+      }
+    </style>
+  </defs>
+
+  <circle cx="64" cy="64" r="62" fill="url(#ambient)" />
+  <circle cx="64" cy="64" r="51" stroke="#36b3fa" stroke-opacity="0.13" />
+  <circle cx="64" cy="64" r="42" stroke="#3b9ff2" stroke-opacity="0.18" stroke-dasharray="2 6" />
+  <path d="M64 19v10M99 64h10M64 99v10M19 64h10" stroke="#2ba9ee" stroke-opacity="0.3" />
+
+  <g class="orbit">
+    <circle
+      cx="64"
+      cy="64"
+      r="51"
+      stroke="url(#orbit)"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-dasharray="78 242"
+    />
+    <circle cx="64" cy="13" r="4" fill="#279bfa" opacity="0.5" filter="url(#glow)" />
+    <circle cx="64" cy="13" r="2.7" fill="#2388f5" />
+    <circle cx="64" cy="115" r="2.3" fill="#17c9df" />
+  </g>
+  <g class="orbit-reverse">
+    <circle
+      cx="64"
+      cy="64"
+      r="42"
+      stroke="#27cbe2"
+      stroke-opacity="0.7"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-dasharray="29 235"
+    />
+    <path d="m106 61 3 3-3 3-3-3 3-3Z" fill="#1ab8e7" />
+  </g>
+
+  <ellipse cx="64" cy="96" rx="20" ry="4" fill="#2689ea" opacity="0.1" />
+  <g class="core">
+    <path d="m64 37 24 14v27L64 92 40 78V51l24-14Z" fill="#f2fcff" stroke="#7bdaf7" />
+    <path d="m64 40 21 12-21 12-21-12 21-12Z" fill="url(#top)" />
+    <path d="m43 53 20 12v23L43 76V53Z" fill="url(#left)" />
+    <path d="m85 53-20 12v23l20-12V53Z" fill="url(#right)" />
+    <path d="m54 52 10-6 10 6-10 6-10-6Z" stroke="#e1fcff" stroke-width="1.2" />
+    <path d="m49 64 8 5v10M79 64l-8 5v10" stroke="#b7f5ff" stroke-opacity="0.8" />
+    <circle cx="57" cy="80" r="1.4" fill="#b5e8ff" />
+    <circle cx="71" cy="80" r="1.4" fill="#d9ffff" />
+  </g>
+  <g class="pulse" fill="#2999ed">
+    <circle cx="24" cy="40" r="1.5" />
+    <circle cx="103" cy="89" r="1.6" />
+    <circle cx="91" cy="25" r="1.2" />
+  </g>
+</svg>
