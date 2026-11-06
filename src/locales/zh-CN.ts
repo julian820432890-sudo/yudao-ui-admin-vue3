@@ -124,7 +124,20 @@ export default {
     small: '小'
   },
   login: {
-    welcome: '欢迎使用本系统',
+    showcase: {
+      label: '安天智能物流品牌展示',
+      headline: '智联全球',
+      highlight: '运筹未来',
+      imageAlt: 'AI 中枢连接智能仓库、运输车辆及海空运网络的立体物流场景',
+      dispatch: 'AI 智能调度',
+      dispatchHint: '连接每一个物流节点',
+      collaboration: '全链路协同',
+      collaborationHint: '让每一步，都有迹可循',
+      smart: '智能调度',
+      global: '全球互联',
+      visible: '可视运营'
+    },
+    welcome: '欢迎使用安天智能物流系统',
     message: '开箱即用的中后台管理系统',
     tenantname: '租户名称',
     username: '用户名',
@@ -213,6 +226,7 @@ export default {
     happyDay: '祝你开心每一天!',
     toady: '今日晴',
     notice: '通知公告',
+    noNotice: '暂无公告',
     project: '项目数',
     access: '项目访问',
     toDo: '待办',

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, unref, watch } from 'vue'
 import { useAppStore } from '@/store/modules/app'
+import { BrandLogo } from '@/components/BrandLogo'
 import { useDesign } from '@/hooks/web/useDesign'
 import { getLayoutRenderMode, isHeaderNavLayout } from '@/utils/layout'
 
@@ -66,9 +67,9 @@ watch(
       ]"
       to="/"
     >
-      <img
-        class="h-[calc(var(--logo-height)-10px)] w-[calc(var(--logo-height)-10px)]"
-        src="@/assets/imgs/logo.png"
+      <BrandLogo
+        mark-only
+        class="h-[calc(var(--logo-height)-10px)] w-[calc(var(--logo-height)-10px)] shrink-0"
       />
       <div
         v-if="show"

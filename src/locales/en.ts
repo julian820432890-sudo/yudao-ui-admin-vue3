@@ -123,7 +123,20 @@ export default {
     small: 'Small'
   },
   login: {
-    welcome: 'Welcome to the system',
+    showcase: {
+      label: 'Antian intelligent logistics showcase',
+      headline: 'Connected world',
+      highlight: 'Smarter journeys',
+      imageAlt: 'An AI core connecting a smart warehouse, cargo vehicles, sea and air logistics',
+      dispatch: 'AI dispatch',
+      dispatchHint: 'Connecting every logistics node',
+      collaboration: 'Connected logistics',
+      collaborationHint: 'Visibility at every step',
+      smart: 'Smart routing',
+      global: 'Global network',
+      visible: 'Full visibility'
+    },
+    welcome: 'Welcome to Antian Intelligent Logistics System',
     message: 'Backstage management system',
     tenantname: 'TenantName',
     username: 'Username',
@@ -211,6 +224,7 @@ export default {
     happyDay: 'Wish you happy every day!',
     toady: `It's sunny today`,
     notice: 'Announcement',
+    noNotice: 'No announcements',
     project: 'Project',
     access: 'Project access',
     toDo: 'To do',

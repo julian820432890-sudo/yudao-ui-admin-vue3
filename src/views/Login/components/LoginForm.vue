@@ -107,30 +107,17 @@
       <el-col :span="24" class="px-10px">
         <el-form-item>
           <div class="w-full flex justify-between">
-            <Icon
-              v-for="(item, key) in socialList"
-              :key="key"
-              :icon="item.icon"
-              :size="30"
-              class="anticon cursor-pointer"
-              color="#999"
+            <button
+              v-for="item in socialList"
+              :key="item.name"
+              type="button"
+              class="social-login-button"
+              :title="item.name"
+              :aria-label="item.name"
               @click="doSocialLogin(item.type)"
-            />
-          </div>
-        </el-form-item>
-      </el-col>
-      <el-divider content-position="center">萌新必读</el-divider>
-      <el-col :span="24" class="px-10px">
-        <el-form-item>
-          <div class="w-full flex justify-between">
-            <el-link href="https://doc.iocoder.cn/" target="_blank">📚开发指南</el-link>
-            <el-link href="https://doc.iocoder.cn/video/" target="_blank">🔥视频教程</el-link>
-            <el-link href="https://www.iocoder.cn/Interview/good-collection/" target="_blank">
-              ⚡面试手册
-            </el-link>
-            <el-link href="http://static.yudao.iocoder.cn/mp/Aix9975.jpeg" target="_blank">
-              🤝外包咨询
-            </el-link>
+            >
+              <Icon :icon="item.icon" :size="30" color="currentColor" />
+            </button>
           </div>
         </el-form-item>
       </el-col>
@@ -188,10 +175,11 @@ const loginData = reactive({
 })
 
 const socialList = [
-  { icon: 'ant-design:wechat-filled', type: 30 },
-  { icon: 'ant-design:dingtalk-circle-filled', type: 20 },
-  { icon: 'ant-design:github-filled', type: 0 },
-  { icon: 'ant-design:alipay-circle-filled', type: 0 }
+  { name: '微信', icon: 'ant-design:wechat-filled', type: 30 },
+  { name: '企业微信授权', icon: 'svg-icon:wecom', type: 30 },
+  { name: '钉钉', icon: 'ant-design:dingtalk-circle-filled', type: 20 },
+  { name: 'GitHub', icon: 'ant-design:github-filled', type: 0 },
+  { name: '支付宝', icon: 'ant-design:alipay-circle-filled', type: 0 }
 ]
 
 // 获取验证码
@@ -225,7 +213,10 @@ const getLoginFormCache = () => {
       ...loginData.loginForm,
       username: loginForm.username ? loginForm.username : loginData.loginForm.username,
       rememberMe: loginForm.rememberMe,
-      tenantName: loginForm.tenantName ? loginForm.tenantName : loginData.loginForm.tenantName
+      tenantName:
+        loginForm.tenantName === '芋道源码'
+          ? loginData.loginForm.tenantName
+          : loginForm.tenantName || loginData.loginForm.tenantName
     }
   }
 }
@@ -288,33 +279,40 @@ const doSocialLogin = async (type: number) => {
     message.error('此方式未配置')
   } else {
     loginLoading.value = true
-    if (loginData.tenantEnable === 'true') {
-      // 尝试先通过 tenantName 获取租户
-      await getTenantId()
-      // 如果获取不到，则需要弹出提示，进行处理
-      if (!authUtil.getTenantId()) {
-        try {
-          const data = await message.prompt('请输入租户名称', t('common.reminder'))
-          if (data?.action !== 'confirm') throw 'cancel'
-          const res = await LoginApi.getTenantIdByName(data.value)
-          authUtil.setTenantId(res)
-        } catch (error) {
-          if (error === 'cancel') return
-        } finally {
-          loginLoading.value = false
+    try {
+      if (loginData.tenantEnable === 'true') {
+        // 尝试先通过 tenantName 获取租户
+        await getTenantId()
+        // 如果获取不到，则需要弹出提示，进行处理
+        if (!authUtil.getTenantId()) {
+          try {
+            const data = await message.prompt('请输入租户名称', t('common.reminder'))
+            if (data?.action !== 'confirm') throw 'cancel'
+            const res = await LoginApi.getTenantIdByName(data.value)
+            authUtil.setTenantId(res)
+          } catch (error) {
+            if (error === 'cancel') return
+          } finally {
+            loginLoading.value = false
+          }
         }
       }
-    }
-    // 计算 redirectUri
-    // 注意: type、redirect 需要先 encode 一次，否则钉钉回调会丢失。
-    // 配合 social-login.vue#getUrlValue() 使用
-    const redirectUri = buildSocialRedirectUri(resolve('/social-login').href, {
-      type,
-      redirect: redirect.value || '/'
-    })
+      // 计算 redirectUri
+      // 注意: type、redirect 需要先 encode 一次，否则钉钉回调会丢失。
+      // 配合 social-login.vue#getUrlValue() 使用
+      const redirectUri = buildSocialRedirectUri(resolve('/social-login').href, {
+        type,
+        redirect: redirect.value || '/'
+      })
 
-    // 进行跳转
-    window.location.href = await LoginApi.socialAuthRedirect(type, encodeURIComponent(redirectUri))
+      // 进行跳转
+      window.location.href = await LoginApi.socialAuthRedirect(
+        type,
+        encodeURIComponent(redirectUri)
+      )
+    } finally {
+      loginLoading.value = false
+    }
   }
 }
 // 取消记住我时，立即清除已缓存的登录信息
@@ -342,9 +340,28 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.anticon) {
+.social-login-button {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: #999;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+
   &:hover {
-    color: var(--el-color-primary) !important;
+    color: var(--el-color-primary);
+  }
+
+  &:focus-visible {
+    color: var(--el-color-primary);
+    outline: 2px solid var(--el-color-primary);
+    outline-offset: 3px;
   }
 }
 
