@@ -56,7 +56,7 @@ const remainingRouter: AppRouteRecordRaw[] = [
     redirect: '/index',
     name: 'Home',
     meta: {
-      hidden: true
+      hidden: false
     },
     children: [
       {
@@ -65,7 +65,7 @@ const remainingRouter: AppRouteRecordRaw[] = [
         name: 'Index',
         meta: {
           title: t('router.home'),
-          icon: 'ep:home-filled',
+          icon: 'ep:data-analysis',
           noCache: false,
           affix: true
         }

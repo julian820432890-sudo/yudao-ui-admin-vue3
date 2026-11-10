@@ -179,7 +179,7 @@ export default {
   },
   router: {
     login: 'Login',
-    home: 'Home',
+    home: 'Management Overview',
     analysis: 'Analysis',
     workplace: 'Workplace'
   },

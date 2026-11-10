@@ -31,7 +31,14 @@ router.beforeEach(async (to, from, next) => {
   loadStart()
   if (getAccessToken()) {
     if (to.path === '/login') {
-      next({ path: '/' })
+      next({ path: '/index', replace: true })
+    } else if (
+      ['/login', '/social-login', '/register'].includes(from.path) &&
+      to.path !== '/index' &&
+      to.path !== '/sso'
+    ) {
+      // 普通登录统一进入管理概览；明确发起的 SSO 授权继续原流程。
+      next({ path: '/index', replace: true })
     } else {
       const dictStore = useDictStoreWithOut()
       const userStore = useUserStoreWithOut()
@@ -52,7 +59,9 @@ router.beforeEach(async (to, from, next) => {
         })
         const redirectPath = from.query.redirect
         // 修复跳转时不带参数的问题
-        const redirect = typeof redirectPath === 'string' ? redirectPath : to.fullPath
+        const leavingLogin = ['/login', '/social-login', '/register'].includes(from.path)
+        const redirect =
+          !leavingLogin && typeof redirectPath === 'string' ? redirectPath : to.fullPath
         const redirectLocation = parseRouteLocation(redirect)
         const nextData =
           to.fullPath === redirect

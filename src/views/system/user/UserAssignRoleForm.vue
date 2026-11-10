@@ -41,7 +41,7 @@ const formRef = ref() // 表单 Ref
 const roleList = ref([] as RoleApi.RoleVO[]) // 角色的列表
 
 /** 打开弹窗 */
-const open = async (row: UserApi.UserVO) => {
+const open = async (row: Pick<UserApi.UserVO, 'id' | 'username' | 'nickname'>) => {
   dialogVisible.value = true
   resetForm()
   // 设置数据

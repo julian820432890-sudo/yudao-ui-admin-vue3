@@ -73,7 +73,7 @@ export default {
     noPermission: `抱歉，您无权访问此页面。`,
     pageError: '抱歉，您访问的页面不存在。',
     networkError: '抱歉，服务器报告错误。',
-    returnToHome: '返回首页'
+    returnToHome: '返回管理概览'
   },
   permission: {
     hasPermission: `请设置操作权限标签值`,
@@ -181,7 +181,7 @@ export default {
   router: {
     login: '登录',
     socialLogin: '社交登录',
-    home: '首页',
+    home: '管理概览',
     analysis: '分析页',
     workplace: '工作台'
   },
@@ -375,7 +375,7 @@ export default {
     },
     exception: {
       backLogin: '返回登录',
-      backHome: '返回首页',
+      backHome: '返回管理概览',
       subTitle403: '抱歉，您无权访问此页面。',
       subTitle404: '抱歉，您访问的页面不存在。',
       subTitle500: '抱歉，服务器报告错误。',

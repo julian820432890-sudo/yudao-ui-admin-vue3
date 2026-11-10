@@ -40,7 +40,6 @@ defineOptions({ name: 'QrCodeForm' })
 const { t } = useI18n()
 const { handleBackLogin, getLoginState } = useLoginState()
 const getShow = computed(() => unref(getLoginState) === LoginStateEnum.QR_CODE)
-const route = useRoute()
 const router = useRouter()
 const qrcode = ref<AuthQrcodeCreateRespVO>()
 const loading = ref(false)
@@ -59,9 +58,7 @@ const createQrcode = async () => {
     if (stopped) return
     stopPolling()
     loading.value = false
-    error.value = qrcode.value
-      ? '二维码已失效，请刷新后重新扫码'
-      : '二维码生成失败，请刷新后重试'
+    error.value = qrcode.value ? '二维码已失效，请刷新后重新扫码' : '二维码生成失败，请刷新后重试'
   }
   qrcode.value = undefined
   error.value = ''
@@ -90,17 +87,8 @@ const createQrcode = async () => {
         stopPolling()
         deleteUserCache()
         setToken(result.login)
-        // 重载以清除内存中的用户/权限及动态路由，目标只允许同源站内路径。
-        const redirect = route.query.redirect
-        let target = new URL(router.resolve('/').href, location.origin)
-        try {
-          const path = typeof redirect === 'string' && redirect.startsWith('/') ? redirect : '/'
-          const candidate = new URL(router.resolve(path).href, location.origin)
-          if (candidate.origin === location.origin) target = candidate
-        } catch {
-          // 无效的跳转参数返回首页。
-        }
-        location.assign(target.pathname + target.search + target.hash)
+        // 重载以清除内存中的用户/权限及动态路由，扫码登录后统一进入管理概览。
+        location.assign(router.resolve('/index').href)
       } catch {
         fail()
       }
