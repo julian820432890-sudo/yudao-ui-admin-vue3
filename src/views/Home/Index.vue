@@ -152,28 +152,27 @@ const availableMenuPaths = computed(() => {
 const systems = computed(() =>
   [
     {
-      code: 'CRM',
-      name: '客户关系管理',
-      description: '客户资料、客户服务与在线业务',
-      roots: ['/crm']
+      code: '租户',
+      name: '租户管理',
+      description: '租户、套餐与平台账号管理',
+      roots: ['/system/tenant/list']
     },
+    { code: '用户', name: '用户管理', description: '人员账号与角色分配', roots: ['/system/user'] },
     {
-      code: 'PMS',
-      name: '产品管理',
-      description: '产品设计、业务类型与轨迹节点',
-      roots: ['/pms/product']
+      code: '角色',
+      name: '角色管理',
+      description: '角色菜单与数据权限配置',
+      roots: ['/system/role']
     },
-    { code: 'SCM', name: '供应链管理', description: '订单资源、供应商与合作管理', roots: ['/scm'] },
-    { code: 'OMS', name: '订单管理', description: '订单接入、跟踪与业务处理', roots: ['/oms'] },
-    { code: 'WMS', name: '仓储管理', description: '入库、库内、配载与中转', roots: ['/wms'] },
-    { code: 'TMS', name: '运输管理', description: '运力、车辆、运输与派送', roots: ['/tms'] },
-    { code: 'FMS', name: '财务管理', description: '应收应付、账单与结算', roots: ['/fms'] },
-    { code: 'OTHER', name: '其他业务', description: '工单、轨迹及关务管理', roots: ['/oa'] },
+    { code: '菜单', name: '菜单管理', description: '系统导航与按钮权限', roots: ['/system/menu'] },
+    { code: '组织', name: '部门管理', description: '组织架构与部门维护', roots: ['/system/dept'] },
+    { code: '岗位', name: '岗位管理', description: '岗位与人员任职信息', roots: ['/system/post'] },
+    { code: '字典', name: '字典管理', description: '系统基础数据字典', roots: ['/system/dict'] },
     {
-      code: '用户中心',
-      name: '统一用户中心',
-      description: '组织、人员、角色与权限管理',
-      roots: ['/system/user', '/system']
+      code: '消息',
+      name: '消息中心',
+      description: '通知、公告与消息管理',
+      roots: ['/system/messages/notice', '/system/messages/notify']
     }
   ].map((system) => ({
     ...system,
@@ -547,7 +546,7 @@ onMounted(refreshOverview)
       </section>
 
       <section class="overview-panel systems-panel" aria-labelledby="systems-heading">
-        <div class="panel-heading"><h2 id="systems-heading">业务系统展示</h2></div>
+        <div class="panel-heading"><h2 id="systems-heading">系统管理入口</h2></div>
         <div class="systems-grid">
           <button
             v-for="system in systems"
@@ -568,7 +567,7 @@ onMounted(refreshOverview)
             ><el-icon v-if="system.path" class="system-arrow"><ArrowRight /></el-icon>
           </button>
         </div>
-        <p class="systems-note">业务入口按当前账号的菜单权限开放</p>
+        <p class="systems-note">入口按当前账号的菜单权限开放</p>
       </section>
     </div>
 

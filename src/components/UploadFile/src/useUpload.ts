@@ -1,4 +1,4 @@
-import * as FileApi from '@/api/infra/file'
+import * as FileApi from '@/api/system/support/file'
 import {
   UploadRawFile,
   UploadRequestOptions,

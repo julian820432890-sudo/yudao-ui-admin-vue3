@@ -62,7 +62,7 @@ export function createVitePlugins(isBuild = false, env: Record<string, string> =
       dts: !isBuild && 'src/types/auto-components.d.ts',
       // 自定义组件的解析器
       resolvers: [ElementPlusResolver()],
-      globs: ['src/components/**/**.{vue, md}', '!src/components/DiyEditor/components/mobile/**']
+      globs: ['src/components/**/**.{vue, md}']
     }),
     createSvgIconsPlugin({
       iconDirs: [pathResolve('src/assets/svgs')],

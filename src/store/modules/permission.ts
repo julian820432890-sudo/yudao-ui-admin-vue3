@@ -42,7 +42,9 @@ export const usePermissionStore = defineStore('permission', {
         let res: AppCustomRouteRecordRaw[] = []
         const roleRouters = wsCache.get(CACHE_KEY.ROLE_ROUTERS)
         if (roleRouters) {
-          res = roleRouters as AppCustomRouteRecordRaw[]
+          res = (roleRouters as AppCustomRouteRecordRaw[]).filter(
+            (route) => String(route.path).replace(/^\/+/, '') === 'system'
+          )
         }
         const routerMap: AppRouteRecordRaw[] = generateRoute(res)
         // 动态路由，404一定要放到最后面

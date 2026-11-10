@@ -59,10 +59,6 @@ const setupAll = async () => {
 
   setupElementPlus(app)
 
-  // form-create 改为在使用表单的页面按需安装（见 @/plugins/formCreate 的 useFormCreate），
-  // 这里提前声明它全局 mixin 中的 formCreateInject 属性，避免已渲染过的组件将其透传为 DOM 属性
-  // type: null、default: undefined 与原插件 props: ['formCreateInject'] 一致，接受任意类型
-  app.mixin({ props: { formCreateInject: { type: null, default: undefined } } })
 
   setupRouter(app)
 

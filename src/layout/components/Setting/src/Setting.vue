@@ -124,7 +124,6 @@ const copyConfig = async () => {
       // 消息图标
       message: ${appStore.getMessage},
       // IM 即时通讯图标
-      im: ${appStore.getIm},
       // 标签页
       tagsView: ${appStore.getTagsView},
       // 标签页
