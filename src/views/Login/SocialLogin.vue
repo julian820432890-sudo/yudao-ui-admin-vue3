@@ -180,7 +180,7 @@ const loginData = reactive({
   captchaEnable: import.meta.env.VITE_APP_CAPTCHA_ENABLE !== 'false',
   tenantEnable: import.meta.env.VITE_APP_TENANT_ENABLE !== 'false',
   loginForm: {
-    tenantName: '芋道源码',
+    tenantName: import.meta.env.VITE_APP_DEFAULT_LOGIN_TENANT || '安天集团',
     username: 'admin',
     password: 'admin123',
     captchaVerification: '',
@@ -214,7 +214,10 @@ const getCookie = () => {
       ...loginData.loginForm,
       username: loginForm.username ? loginForm.username : loginData.loginForm.username,
       rememberMe: loginForm.rememberMe ? true : false,
-      tenantName: loginForm.tenantName ? loginForm.tenantName : loginData.loginForm.tenantName
+      tenantName:
+        loginForm.tenantName === '\u828b\u9053源码'
+          ? loginData.loginForm.tenantName
+          : loginForm.tenantName || loginData.loginForm.tenantName
     }
   }
 }

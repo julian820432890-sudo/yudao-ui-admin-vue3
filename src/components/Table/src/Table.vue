@@ -31,9 +31,9 @@ export default defineComponent({
   props: {
     pageSize: propTypes.number.def(10),
     currentPage: propTypes.number.def(1),
-    // 是否多选（芋道原有能力，源列中已有 selection 列时不重复生成）
+    // 是否多选（安天原有能力，源列中已有 selection 列时不重复生成）
     selection: propTypes.bool.def(false),
-    // 是否展开行（芋道原有能力，使用 expand 插槽；源列中已有 expand 列时不重复生成）
+    // 是否展开行（安天原有能力，使用 expand 插槽；源列中已有 expand 列时不重复生成）
     expand: propTypes.bool.def(false),
     // 是否展示表格的工具栏
     showAction: propTypes.bool.def(false),
@@ -60,11 +60,11 @@ export default defineComponent({
     loading: propTypes.bool.def(false),
     // 是否叠加索引
     reserveIndex: propTypes.bool.def(false),
-    // 对齐方式（芋道默认 center）
+    // 对齐方式（安天默认 center）
     align: propTypes.string
       .validate((v: string) => ['left', 'center', 'right'].includes(v))
       .def('center'),
-    // 表头对齐方式（芋道默认 center）
+    // 表头对齐方式（安天默认 center）
     headerAlign: propTypes.string
       .validate((v: string) => ['left', 'center', 'right'].includes(v))
       .def('center'),
@@ -235,7 +235,7 @@ export default defineComponent({
   setup(props, { attrs, emit, slots, expose }) {
     const elTableRef = ref<ComponentRef<typeof ElTable>>()
 
-    // 注册：第二个参数为实际的 ElTable 实例，与芋道 useTable 的 register 一致
+    // 注册：第二个参数为实际的 ElTable 实例，与安天 useTable 的 register 一致
     onMounted(() => {
       const tableRef = unref(elTableRef)
       emit('register', tableRef?.$parent, elTableRef.value)
@@ -592,7 +592,7 @@ export default defineComponent({
       )
     }
 
-    // 展开列：内容优先 column.slots.default，其次芋道原有的 expand 插槽
+    // 展开列：内容优先 column.slots.default，其次安天原有的 expand 插槽
     const renderExpandColumn = (v: TableColumn = { field: '', type: 'expand' }) => {
       const { align, headerAlign } = unref(getProps)
       return (

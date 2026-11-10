@@ -214,7 +214,7 @@ const getLoginFormCache = () => {
       username: loginForm.username ? loginForm.username : loginData.loginForm.username,
       rememberMe: loginForm.rememberMe,
       tenantName:
-        loginForm.tenantName === '芋道源码'
+        loginForm.tenantName === '\u828b\u9053源码'
           ? loginData.loginForm.tenantName
           : loginForm.tenantName || loginData.loginForm.tenantName
     }

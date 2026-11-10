@@ -78,7 +78,7 @@ export interface TableSetProps {
   value: any
 }
 
-// 芋道原有名称
+// 安天原有名称
 export type TableSetPropsType = TableSetProps
 
 // 列设置中用户确认的偏好（按顺序），只叠加在渲染列上，不写回源列

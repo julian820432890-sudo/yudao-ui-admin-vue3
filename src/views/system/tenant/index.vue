@@ -77,6 +77,7 @@
           type="primary"
           plain
           @click="openForm('create')"
+          v-if="canCreateTenants"
           v-hasPermi="['system:tenant:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" />
@@ -87,6 +88,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
+          v-if="canExportTenants"
           v-hasPermi="['system:tenant:export']"
         >
           <Icon icon="ep:download" class="mr-5px" />
@@ -97,6 +99,7 @@
           plain
           :disabled="checkedIds.length === 0"
           @click="handleDeleteBatch"
+          v-if="canDeleteTenants"
           v-hasPermi="['system:tenant:delete']"
         >
           <Icon icon="ep:delete" class="mr-5px" />
@@ -109,7 +112,12 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" @selection-change="handleRowCheckboxChange">
-      <el-table-column type="selection" width="55" />
+      <el-table-column
+        v-if="canDeleteTenants"
+        type="selection"
+        width="55"
+        :selectable="canSelectTenant"
+      />
       <el-table-column label="租户编号" align="center" prop="id" />
       <el-table-column label="租户名" align="center" prop="name" />
       <el-table-column label="租户套餐" align="center" prop="packageId">
@@ -161,12 +169,22 @@
           <el-button
             link
             type="primary"
+            @click="openForm('detail', scope.row.id)"
+            v-hasPermi="['system:tenant:query']"
+          >
+            详情
+          </el-button>
+          <el-button
+            v-if="canUpdateTenants"
+            link
+            type="primary"
             @click="openForm('update', scope.row.id)"
             v-hasPermi="['system:tenant:update']"
           >
             编辑
           </el-button>
           <el-button
+            v-if="canDeleteTenants && scope.row.packageId !== 0"
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
@@ -196,11 +214,21 @@ import download from '@/utils/download'
 import * as TenantApi from '@/api/system/tenant'
 import * as TenantPackageApi from '@/api/system/tenantPackage'
 import TenantForm from './TenantForm.vue'
+import { getTenantId } from '@/utils/auth'
+import { checkPermi } from '@/utils/permission'
 
 defineOptions({ name: 'SystemTenant' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
+// 与后端一致：各项租户操作分别要求原登录平台身份和对应权限。
+const hasTenantPermission = (action: string) =>
+  Number(getTenantId()) === 1 && checkPermi([`system:tenant:${action}`])
+const canCreateTenants = computed(() => hasTenantPermission('create'))
+const canUpdateTenants = computed(() => hasTenantPermission('update'))
+const canDeleteTenants = computed(() => hasTenantPermission('delete'))
+const canExportTenants = computed(() => hasTenantPermission('export'))
+const canSelectTenant = (row: TenantApi.TenantVO) => row.packageId !== 0
 
 const loading = ref(true) // 列表的加载中
 const total = ref(0) // 列表的总页数
@@ -244,7 +272,7 @@ const resetQuery = () => {
 
 /** 添加/修改操作 */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
+const openForm = (type: 'create' | 'update' | 'detail', id?: number) => {
   formRef.value.open(type, id)
 }
 

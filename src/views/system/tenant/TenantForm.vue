@@ -1,17 +1,26 @@
 <template>
   <Dialog v-model="dialogVisible" :title="dialogTitle" width="50%">
+    <el-alert
+      v-if="isSystemTenant && !isReadonly"
+      title="系统租户可修改名称、联系人、手机和绑定域名；套餐、账号额度、过期时间和状态保留保护。"
+      type="info"
+      :closable="false"
+      class="mb-16px"
+    />
     <el-form
       ref="formRef"
       v-loading="formLoading"
       :model="formData"
       :rules="formRules"
+      :disabled="isReadonly"
       label-width="80px"
     >
       <el-form-item label="租户名" prop="name">
         <el-input v-model="formData.name" placeholder="请输入租户名" />
       </el-form-item>
       <el-form-item label="租户套餐" prop="packageId">
-        <el-select v-model="formData.packageId" clearable placeholder="请选择租户套餐">
+        <el-input v-if="isReadonly || isSystemTenant" :model-value="packageName" readonly />
+        <el-select v-else v-model="formData.packageId" clearable placeholder="请选择租户套餐">
           <el-option
             v-for="item in packageList"
             :key="item.id"
@@ -26,10 +35,10 @@
       <el-form-item label="联系手机" prop="contactMobile">
         <el-input v-model="formData.contactMobile" placeholder="请输入联系手机" />
       </el-form-item>
-      <el-form-item v-if="formData.id === undefined" label="用户名称" prop="username">
+      <el-form-item v-if="formType === 'create'" label="用户名称" prop="username">
         <el-input v-model="formData.username" placeholder="请输入用户名称" />
       </el-form-item>
-      <el-form-item v-if="formData.id === undefined" label="用户密码" prop="password">
+      <el-form-item v-if="formType === 'create'" label="用户密码" prop="password">
         <el-input
           v-model="formData.password"
           placeholder="请输入用户密码"
@@ -40,6 +49,7 @@
       <el-form-item label="账号额度" prop="accountCount">
         <el-input-number
           v-model="formData.accountCount"
+          :disabled="isSystemTenant"
           :min="0"
           controls-position="right"
           placeholder="请输入账号额度"
@@ -48,6 +58,7 @@
       <el-form-item label="过期时间" prop="expireTime">
         <el-date-picker
           v-model="formData.expireTime"
+          :disabled="isSystemTenant"
           clearable
           placeholder="请选择过期时间"
           type="date"
@@ -62,7 +73,7 @@
         />
       </el-form-item>
       <el-form-item label="租户状态" prop="status">
-        <el-radio-group v-model="formData.status">
+        <el-radio-group v-model="formData.status" :disabled="isSystemTenant">
           <el-radio
             v-for="dict in getIntDictOptions(DICT_TYPE.COMMON_STATUS)"
             :key="dict.value"
@@ -74,8 +85,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :disabled="formLoading" type="primary" @click="submitForm">确 定</el-button>
-      <el-button @click="dialogVisible = false">取 消</el-button>
+      <el-button v-if="!isReadonly" :disabled="formLoading" type="primary" @click="submitForm">
+        确 定
+      </el-button>
+      <el-button @click="dialogVisible = false">{{ isReadonly ? '关 闭' : '取 消' }}</el-button>
     </template>
   </Dialog>
 </template>
@@ -84,15 +97,16 @@ import { DICT_TYPE, getIntDictOptions } from '@/utils/dict'
 import * as TenantApi from '@/api/system/tenant'
 import { CommonStatusEnum } from '@/utils/constants'
 import * as TenantPackageApi from '@/api/system/tenantPackage'
+import { getTenantId } from '@/utils/auth'
+import { checkPermi } from '@/utils/permission'
 
 defineOptions({ name: 'SystemTenantForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
 const dialogVisible = ref(false) // 弹窗的是否展示
-const dialogTitle = ref('') // 弹窗的标题
 const formLoading = ref(false) // 表单的加载中：1）修改时的数据加载；2）提交的按钮禁用
-const formType = ref('') // 表单的类型：create - 新增；update - 修改
+const formType = ref<'create' | 'update' | 'detail'>('detail')
 const formData = ref({
   id: undefined,
   name: undefined,
@@ -119,30 +133,57 @@ const formRules = reactive({
 })
 const formRef = ref() // 表单 Ref
 const packageList = ref([] as TenantPackageApi.TenantPackageVO[]) // 租户套餐
+const canCreateTenants = computed(
+  () => Number(getTenantId()) === 1 && checkPermi(['system:tenant:create'])
+)
+const canUpdateTenants = computed(
+  () => Number(getTenantId()) === 1 && checkPermi(['system:tenant:update'])
+)
+const isSystemTenant = computed(
+  () => formData.value.id !== undefined && formData.value.packageId === 0
+)
+const isReadonly = computed(() => {
+  if (formType.value === 'detail') return true
+  if (formType.value === 'update') return !canUpdateTenants.value
+  return !canCreateTenants.value
+})
+const dialogTitle = computed(() => (isReadonly.value ? '租户详情' : t('action.' + formType.value)))
+const packageName = computed(() => {
+  const id = formData.value.packageId
+  if (id === 0) return '系统租户'
+  if (id === undefined || id === null) return ''
+  return packageList.value.find((item) => item.id === id)?.name || `套餐（编号：${id}）`
+})
 
 /** 打开弹窗 */
-const open = async (type: string, id?: number) => {
-  dialogVisible.value = true
-  dialogTitle.value = t('action.' + type)
+const open = async (type: 'create' | 'update' | 'detail', id?: number) => {
+  if (type === 'create' && !canCreateTenants.value) {
+    return
+  }
   formType.value = type
   resetForm()
-  // 修改时，设置数据
-  if (id) {
-    formLoading.value = true
-    try {
-      formData.value = await TenantApi.getTenant(id)
-    } finally {
-      formLoading.value = false
-    }
+  dialogVisible.value = true
+  formLoading.value = true
+  try {
+    const [packages, tenant] = await Promise.all([
+      TenantPackageApi.getTenantPackageList(),
+      id ? TenantApi.getTenant(id) : Promise.resolve(undefined)
+    ])
+    packageList.value = packages
+    if (tenant) formData.value = tenant
+  } catch {
+    // 请求失败时由统一拦截器提示，避免继续展示未完整加载的表单。
+    dialogVisible.value = false
+  } finally {
+    formLoading.value = false
   }
-  // 加载套餐列表
-  packageList.value = await TenantPackageApi.getTenantPackageList()
 }
 defineExpose({ open }) // 提供 open 方法，用于打开弹窗
 
 /** 提交表单 */
 const emit = defineEmits(['success']) // 定义 success 事件，用于操作成功后的回调
 const submitForm = async () => {
+  if (isReadonly.value) return
   // 校验表单
   if (!formRef) return
   const valid = await formRef.value.validate()
